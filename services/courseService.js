@@ -36,6 +36,11 @@ async function sortedCourses(action, value) {
   return courses;
 }
 
+async function getCourseEnrollmenrs(courseId) {
+  const count = courseRepository.getEnrollments(courseId);
+  return count;
+}
+
 async function courseDetails(userId, courseId) {
   const courses = courseRepository.getCourseDetails(userId, courseId);
   return courses;
@@ -89,4 +94,5 @@ module.exports = {
   courseMcq,
   courseScore,
   unenrollCourse,
+  getCourseEnrollmenrs,
 };

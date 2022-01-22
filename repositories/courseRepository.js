@@ -77,6 +77,20 @@ function getSearchedCourses(userID, searchVal) {
   });
 }
 
+function getEnrollments(courseId) {
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT * FROM userCourses WHERE cid = ?
+    `;
+    knex_db
+      .raw(sql, [courseId])
+      .then((result) => {
+        resolve(result.length);
+      })
+      .catch(reject);
+  });
+}
+
 function getSortedCourses(action, value) {
   let sql = `SELECT id, title, level FROM courses`;
 
@@ -326,5 +340,6 @@ module.exports = {
   getCourseMcq,
   setCourseScore,
   getRecentCourses,
+  getEnrollments,
   init,
 };
