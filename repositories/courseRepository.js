@@ -1,4 +1,4 @@
-const fetch = require("node-fetch");
+const fetch = require('node-fetch');
 
 let _db;
 
@@ -6,7 +6,7 @@ function init(db) {
   _db = db;
 }
 
-const knex_db = require("../db/db-config");
+const knex_db = require('../db/db-config');
 
 function getRecentCourses(count) {
   const sql = `SELECT * from courses ORDER BY id DESC LIMIT ?`;
@@ -44,7 +44,7 @@ function getUserCourses(userID) {
     knex_db
       .raw(sql, [userID])
       .then((courses) => {
-        const injectedString = courses.map((c) => `'${c.cid}'`).join(", ");
+        const injectedString = courses.map((c) => `'${c.cid}'`).join(', ');
         const sql2 = `SELECT courses.id, courses.title, userCourses.score FROM courses INNER JOIN userCourses WHERE id IN (${injectedString}) AND courses.id == userCourses.cid AND userCourses.uid = ?`;
 
         knex_db
@@ -81,19 +81,30 @@ function getSortedCourses(action, value) {
   let sql = `SELECT id, title, level FROM courses`;
 
   return new Promise((resolve, reject) => {
-    if (action == "sort") {
-      if (value == "name") {
+    if (action == 'sort') {
+      if (value == 'name') {
         sql = `SELECT id, title, level FROM courses ORDER BY title`;
+      } else if (value == 'popularity') {
+        sql = `SELECT cid, COUNT(cid) as counts, 
+        courses.title, 
+        courses.level, 
+        courses.description, 
+        courses.price  from userCourses
+        INNER JOIN courses on userCourses.cid = courses.id
+        GROUP BY cid
+        ORDER BY counts DESC
+        `;
       }
       knex_db
         .raw(sql)
         .then((courses) => {
+          console.log(courses);
           resolve(courses);
         })
         .catch((error) => {
           reject(error);
         });
-    } else if (action == "filter") {
+    } else if (action == 'filter') {
       sql = `SELECT id, title, level FROM courses WHERE level = ? ORDER BY title`;
       knex_db
         .raw(sql, [value])
@@ -121,12 +132,12 @@ function getCourseDetails(userId, courseId) {
   const sql2 = `SELECT uid FROM userCourses WHERE cid = ? AND uid = ?`;
 
   return new Promise(async (resolve, reject) => {
-    let enrolled = "";
+    let enrolled = '';
     var registeredCourses = await knex_db.raw(sql2, [courseId, userId]);
     if (registeredCourses.length > 0) {
-      enrolled = "yes";
+      enrolled = 'yes';
     } else {
-      enrolled = "no";
+      enrolled = 'no';
     }
 
     knex_db
@@ -203,13 +214,13 @@ function getCourseMcq(courseId) {
     knex_db
       .raw(sql1, [courseId])
       .then((data) => {
-        const injectedString = data.map((c) => `'${c.qid}'`).join(", ");
+        const injectedString = data.map((c) => `'${c.qid}'`).join(', ');
         const sql2 = `SELECT qid, questions FROM mcqQuestions WHERE qid IN (${injectedString}) `;
 
         knex_db
           .raw(sql2)
           .then((questions) => {
-            const injectedString = data.map((c) => `'${c.qid}'`).join(", ");
+            const injectedString = data.map((c) => `'${c.qid}'`).join(', ');
             const sql3 = `SELECT qid, answer, aid FROM mcqAnswers WHERE qid IN (${injectedString})`;
 
             knex_db
@@ -242,7 +253,7 @@ function setCourseScore(courseId, userId, ans1, ans2, ans3) {
     knex_db
       .raw(sql1, [courseId])
       .then((data) => {
-        const injectedString = data.map((q) => `'${q.qid}'`).join(", ");
+        const injectedString = data.map((q) => `'${q.qid}'`).join(', ');
         const sql2 = `SELECT aid FROM correctAnswers WHERE qid IN (${injectedString})`;
 
         knex_db
