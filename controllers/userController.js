@@ -1,30 +1,30 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const homeService = require("../services/homeService");
-const userService = require("../services/userService");
+const homeService = require('../services/homeService');
+const userService = require('../services/userService');
 
-router.get("/signin", async (req, res) => {
-  res.render("signin.ejs", { message: "" });
+router.get('/signin', async (req, res) => {
+  res.render('signin.ejs', { message: '' });
 });
 
-router.post("/signin", async (req, res) => {
+router.post('/signin', async (req, res) => {
   homeService
     .signInUser(req.body.email, req.body.password)
     .then((user) => {
-        req.session.userId = user.id;
-        res.redirect("/user/home");
+      req.session.userId = user.id;
+      res.redirect('/user/home');
     })
     .catch((error) => {
       console.log(error);
-      res.render("signin.ejs", { message: error });
+      res.render('signin.ejs', { message: error });
     });
 });
 
-router.get("/signup", async (req, res) => {
-  res.render("signup.ejs", { message: "" });
+router.get('/signup', async (req, res) => {
+  res.render('signup.ejs', { message: '' });
 });
 
-router.post("/signup", async (req, res) => {
+router.post('/signup', async (req, res) => {
   userService
     .signUpUser(
       req.body.name,
@@ -33,53 +33,66 @@ router.post("/signup", async (req, res) => {
       req.body.passwordTwo
     )
     .then((data) => {
-      res.redirect("/");
+      res.redirect('/');
     })
     .catch((data) => {
-      res.render("signup.ejs", { message: data.error });
+      res.render('signup.ejs', { message: data.error });
     });
 });
 
-router.get("/home", async (req, res) => {
+router.get('/home', async (req, res) => {
   const userId = req.session.userId;
   if (userId == null) {
-    res.redirect("/");
+    res.redirect('/');
   } else {
     homeService
       .getUserSpecificDetailsWithId(userId)
       .then((data) => {
-        res.render("home.ejs", {
+        let total = 0;
+        if (data.userCourses.length > 0) {
+          data.userCourses.forEach((course) => {
+            total += course.score;
+          });
+        }
+
+        res.render('home.ejs', {
           userName: data.user.name,
           userId: data.user.id,
           courses: data.userCourses,
-          recentCourses: data.recentCourses, //TODO
+          recentCourses: data.recentCourses,
+          level:
+            data.userCourses.length <= 2
+              ? 'Novice'
+              : total > 90
+              ? 'Expert'
+              : data.userCourses.length > 2 ||
+                data.userCourses.filter((course) => course.score > 0).length > 0
+              ? 'Beginner'
+              : '||', //TODO
         });
       })
       .catch((error) => {
-        res.render("error.ejs", { message: error });
+        res.render('error.ejs', { message: error });
       });
   }
 });
 
-router.get("/flag", async (req, res) => {
+router.get('/flag', async (req, res) => {
   const userId = req.session.userId;
 
-    userService
-      .userFlag(userId)
-      .then((data) => {
-        res.json({flag : data})
-      })
-      .catch((error) => {
-        res.render("error.ejs", { message: error });
-      });
- 
+  userService
+    .userFlag(userId)
+    .then((data) => {
+      res.json({ flag: data });
+    })
+    .catch((error) => {
+      res.render('error.ejs', { message: error });
+    });
 });
 
-
-
-router.post("/signout", async (req, res) => {
+router.post('/signout', async (req, res) => {
   req.session.userId = null;
-  res.redirect("/");
+  res.redirect('/');
 });
 
 module.exports = router;
