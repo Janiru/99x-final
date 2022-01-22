@@ -66,6 +66,10 @@ router.get('/home', async (req, res) => {
                 sortedCourses.length > 5
                   ? sortedCourses.slice(0, 5)
                   : sortedCourses,
+              sideCourses:
+                sortedCourses.length > 4
+                  ? sortedCourses.slice(0, 4)
+                  : sortedCourses,
               level:
                 data.userCourses.length <= 2
                   ? 'Novice'

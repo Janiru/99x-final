@@ -74,15 +74,15 @@
         <div class="right-menu" id="contentlink1" ><iframe name="contentlink1" src="/course/mcq/<%= id %>" width="900" height="500"></iframe> </div>
 
         <div class="right-menu" id="contentlink2" style="display: block;">
-          <span class="topic2"><span id="read-time-1">xx</span> seconds read</span>
+          <span class="topic2"><span id="read-time-1"><%= chapters[0].time %></span> seconds read</span>
           <p><%= chapters[0].description %></p> <button id="btnChapterOne" class="btn">Mark as Done</button></div>
 
         <div class="right-menu" id="contentlink3" >
-          <span class="topic2"><span id="read-time-2">xx</span> seconds read</span>
+          <span class="topic2"><span id="read-time-2"><%= chapters[1].time %></span> seconds read</span>
           <p><%= chapters[1].description %></p><button id="btnChapterTwo" class="btn">Mark as Done</button></div>
 
         <div class="right-menu" id="contentlink4" >
-          <span class="topic2"><span id="read-time-3">xx</span> seconds read</span>
+          <span class="topic2"><span id="read-time-3"><%= chapters[2].time %></span> seconds read</span>
           <p><%= chapters[2].description %></p><button id="btnChapterThree" class="btn">Mark as Done</button> </div>     
       </div>
       <script>
