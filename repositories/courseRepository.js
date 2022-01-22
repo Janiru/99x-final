@@ -85,7 +85,8 @@ function getSortedCourses(action, value) {
       if (value == 'name') {
         sql = `SELECT id, title, level FROM courses ORDER BY title`;
       } else if (value == 'popularity') {
-        sql = `SELECT cid, COUNT(cid) as counts, 
+        sql = `
+        SELECT cid, COUNT(cid) as counts, 
         courses.title, 
         courses.level, 
         courses.description, 
@@ -95,6 +96,7 @@ function getSortedCourses(action, value) {
         ORDER BY counts DESC
         `;
       }
+
       knex_db
         .raw(sql)
         .then((courses) => {

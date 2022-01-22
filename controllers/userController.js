@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const homeService = require('../services/homeService');
+const courseService = require('../services/courseService');
 const userService = require('../services/userService');
 
 router.get('/signin', async (req, res) => {
@@ -54,22 +55,29 @@ router.get('/home', async (req, res) => {
             total += course.score;
           });
         }
-
-        res.render('home.ejs', {
-          userName: data.user.name,
-          userId: data.user.id,
-          courses: data.userCourses,
-          recentCourses: data.recentCourses,
-          level:
-            data.userCourses.length <= 2
-              ? 'Novice'
-              : total > 90
-              ? 'Expert'
-              : data.userCourses.length > 2 ||
-                data.userCourses.filter((course) => course.score > 0).length > 0
-              ? 'Beginner'
-              : '||', //TODO
-        });
+        courseService
+          .sortedCourses('sort', 'popularity')
+          .then((sortedCourses) => {
+            res.render('home.ejs', {
+              userName: data.user.name,
+              userId: data.user.id,
+              courses: data.userCourses,
+              recentCourses:
+                sortedCourses.length > 5
+                  ? sortedCourses.slice(0, 5)
+                  : sortedCourses,
+              level:
+                data.userCourses.length <= 2
+                  ? 'Novice'
+                  : total > 90
+                  ? 'Expert'
+                  : data.userCourses.length > 2 ||
+                    data.userCourses.filter((course) => course.score > 0)
+                      .length > 0
+                  ? 'Beginner'
+                  : '||', //TODO
+            });
+          });
       })
       .catch((error) => {
         res.render('error.ejs', { message: error });
