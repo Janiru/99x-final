@@ -186,7 +186,6 @@ router.get('/coursePage', async (req, res) => {
     courseContent.chapters[i].time = Math.round(wordCount / wordsPersecond);
   });
 
-  console.log(courseContent.chapters);
   res.render(
     'course-page.ejs',
     {
@@ -269,14 +268,19 @@ router.post('/scores/:id', async (req, res) => {
     ans2,
     ans3
   );
-  res.render('scores.ejs', { score: courseScore }, (error, ejs) => {
-    if (error) {
-      console.log(error);
-      res.render('error.ejs', { message: 'EJS' });
-    } else {
-      res.send(ejs);
+  const avarageMarks = await courseService.getCourseAverageMarks(courseId);
+  res.render(
+    'scores.ejs',
+    { score: courseScore, avarageMarks },
+    (error, ejs) => {
+      if (error) {
+        console.log(error);
+        res.render('error.ejs', { message: 'EJS' });
+      } else {
+        res.send(ejs);
+      }
     }
-  });
+  );
 });
 
 router.post('/review/:cid', async (req, res) => {

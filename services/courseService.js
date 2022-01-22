@@ -16,6 +16,11 @@ async function allCourses(userId) {
   return courses;
 }
 
+async function getCourseAverageMarks(courseId) {
+  const result = courseRepository.getAverageMarks(courseId);
+  return result;
+}
+
 async function userCourses(userId) {
   const courses = courseRepository.getUserCourses(userId);
   return courses;
@@ -95,4 +100,5 @@ module.exports = {
   courseScore,
   unenrollCourse,
   getCourseEnrollmenrs,
+  getCourseAverageMarks,
 };

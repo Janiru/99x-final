@@ -25,15 +25,49 @@ function getRecentCourses(count) {
 
 function getAllCourses(userId) {
   return new Promise((resolve, reject) => {
-    const sql = `SELECT id, title, level FROM courses`;
+    const sql = `SELECT id, title, level, userCourses.score, userCourses.uid as user FROM courses 
+      LEFT JOIN userCourses ON courses.id = userCourses.cid 
+    `;
     knex_db
       .raw(sql)
       .then((courses) => {
-        resolve(courses);
+        const result = [];
+        courses.forEach((course) => {
+          let obj = course;
+          if (result.find((item) => item.id == course.id)) {
+            const index = result.findIndex((item) => item.id == course.id);
+            if (course.user == userId) {
+              course.status = course.score >= 0 ? 'Completed' : 'Enrolled';
+              result[index] = course;
+            }
+          } else {
+            if (course.user == userId) {
+              course.status = course.score >= 0 ? 'Completed' : 'Enrolled';
+            }
+            result.push(course);
+          }
+        });
+        console.log(result);
+        resolve(result);
       })
       .catch((error) => {
         reject(error);
       });
+  });
+}
+
+function getAverageMarks(courseId) {
+  const sql = `SELECT * FROM userCourses WHERE cid = ? AND score <> ?`;
+  return new Promise((resolve, reject) => {
+    knex_db
+      .raw(sql, [courseId, -1])
+      .then((result) => {
+        if (result.length == 0) resolve(0);
+        let total = 0;
+        result.forEach((item) => (total += item.score));
+        resolve(Math.round(total / result.length));
+      })
+      .catch(reject);
   });
 }
 
@@ -341,5 +375,6 @@ module.exports = {
   setCourseScore,
   getRecentCourses,
   getEnrollments,
+  getAverageMarks,
   init,
 };
