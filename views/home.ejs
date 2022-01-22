@@ -89,13 +89,13 @@
                 </div>
             <%}%>
 
-            
+            <% if (courses.length == 0){ %>
             <div id="popular-courses">
                 <% if (courses.length == 0){ %>
                 <p style="font-size: 25px; font-weight: 600;" class="orange">Or get started with some of our most popular courses.</p>
                 <% } %>
                 <div  class="popular-courses-container" id="popular-courses-container">
-                    <% if (courses.length == 0){ %>
+                    
                         <% recentCourses.forEach((course) => { %>
                             <a href="#">
                                 <div class="small-card-home">
@@ -112,9 +112,10 @@
                                 </div>
                             </a>
                         <% }) %>
-                    <% } %>
+                    
                 </div>
             </div>
+            <% } %>
            
         </div>
        
