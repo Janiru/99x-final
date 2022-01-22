@@ -181,7 +181,7 @@ router.get("/coursePage", async (req, res) => {
   const courseContent = await courseService.courseContentDetails(courseId);
   courseContent.chapters.forEach((chapter, i) => {
     const wordsPersecond = 4 + (4 * i * 5) / 100;
-    const wordCount = chapter.description.length;
+    const wordCount = chapter.description.split(" ").length;
     courseContent.chapters[i].time = Math.round(wordCount / wordsPersecond);
   });
 
