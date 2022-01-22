@@ -167,6 +167,21 @@ function enrollInCourse(userId, courseId) {
   });
 }
 
+function unenrollCourse(userId, courseId) {
+  const sql = `DELETE FROM userCourses WHERE cid = ? AND uid = ?`;
+
+  return new Promise((resolve, reject) => {
+    knex_db
+      .raw(sql, [courseId, userId])
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
 function getCourseContentDetails(courseId) {
   const sql = `SELECT id, title, level, description FROM courses WHERE id = ?`;
   const sql1 = `SELECT description , id FROM chapters WHERE cid = ?`;
@@ -302,6 +317,7 @@ module.exports = {
   getSortedCourses,
   getCourseDetails,
   enrollInCourse,
+  unenrollCourse,
   getCourseContentDetails,
   resetEnrolledCourses,
   getCourseMcq,
