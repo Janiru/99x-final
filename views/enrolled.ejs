@@ -2,141 +2,71 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../css/index.css">
-  <link rel="stylesheet" href="../css/typography.css">
-  <link rel="stylesheet" href="../css/navbar.css">
-  <link rel="stylesheet" href="../css/subnav.css" />
-  <link rel="stylesheet" href="../css/coursePage.css">
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-  <title>Course Content</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/typography.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <title>Enrolled Courses</title>
 </head>
 
-<body>
-  <div class="navbar-container" style="height: 90px;">
-    <div class="navlogo-container">
-      <img style="width: 150px;" src="../assets/logo.png">
-    </div>
-  
-  </div>
-  <div class="dashboard-main-container1">
-    <div style="padding: 20px 0px;">
-      <div class="subnav" style="width: 550px; padding-top: 0px; ">
-        <div class="stepper-wrapper">
-          <div class="stepper-item ">
-            <a href="/user/home">
-              <div class="step-counter">
-                Home
-              </div>
-            </a>
-          </div>
-          <div class="stepper-item ">
-            <div class="step-counter">
-              <%= title %>
-            </div>
-          </div>
-          <div class="stepper-item ">
-            <div class="step-counter">Contents</div>
-          </div>
+
+<body style="background-color: #F9F9F9;">
+    <%- include('navbar', {page: 'enrolled'}) -%>
+    <% if (courses.length<1) {%>
+        <div class="card-container" style="display: flex; justify-content: center; align-items: center;">
+            <p class="empty-informer narrow" style="margin: 0px; padding-top: 200px;">You haven't enrolled in any
+                courses</p>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="dashboard-container" style="display: flex; flex-direction: column; align-items: flex-start; padding: 0px; margin-top: -40px;">
-    <div class="topic">
-      <p class="narrow name">
-        <span class="topic1">
-          <%= title %>
-        </span> <br>
-        <span class="topic2">
-          <%= level %>
-        </span>
-      </p>
-    </div>
-    <div class="dashboard-below-container " style="display: flex; justify-content: center; align-items: center;">
-      <div class="row" style="padding-left: 3%; padding-bottom: 5%; ">
-        <div class="left-menu">
-            <button class="coursedashChapter" onclick="changeDiv('contentlink2')" id="chapterOne"><a class="num">01</a>Chapter One</button>
-          <div class="dash">
-            <button class="coursedash" onclick="changeDiv('contentlink3')" id="chapterTwo" disabled><a class="num">02</a>Chapter Two</button>
-          </div>
-          <div class="dash">
-            <button class="coursedash" onclick="changeDiv('contentlink4')"  id="chapterThree" disabled><a class="num">03</a>Chapter Three</button>
-          </div>
-          <div class="dash">
-            <button class="coursedash" onclick="changeDiv('contentlink1')" id="assessmentToggle" disabled>Assesment</button>
-          </div>
-        </div>
-        <div class="right-menu" id="contentlink1" ><iframe name="contentlink1" src="/course/mcq/<%= id %>" width="900" height="500"></iframe> </div>
-
-        <div class="right-menu" id="contentlink2" style="display: block;">
-          <span class="topic2"><span id="read-time-1"><%= chapters[0].time %></span> seconds read</span>
-          <p><%= chapters[0].description %></p> <button id="btnChapterOne" class="btn">Mark as Done</button></div>
-
-        <div class="right-menu" id="contentlink3" >
-          <span class="topic2"><span id="read-time-2"><%= chapters[1].time %></span> seconds read</span>
-          <p><%= chapters[1].description %></p><button id="btnChapterTwo" class="btn">Mark as Done</button></div>
-
-        <div class="right-menu" id="contentlink4" >
-          <span class="topic2"><span id="read-time-3"><%= chapters[2].time %></span> seconds read</span>
-          <p><%= chapters[2].description %></p><button id="btnChapterThree" class="btn">Mark as Done</button> </div>     
-      </div>
-      <script>
-        function changeDiv(value) {
-          
-          if (value == "contentlink1") {
-            document.getElementById("contentlink1").style.display = "block";
-            document.getElementById("contentlink2").style.display = "none";
-            document.getElementById("contentlink3").style.display = "none";
-            document.getElementById("contentlink4").style.display = "none";
-          }
-          else if (value == "contentlink2") {
-            document.getElementById("contentlink2").style.display = "block";
-            document.getElementById("contentlink1").style.display = "none";
-            document.getElementById("contentlink3").style.display = "none";
-            document.getElementById("contentlink4").style.display = "none";
-          }
-          else if (value == "contentlink3") {
-            document.getElementById("contentlink3").style.display = "block";
-            document.getElementById("contentlink1").style.display = "none";
-            document.getElementById("contentlink2").style.display = "none";
-            document.getElementById("contentlink4").style.display = "none";
-          }
-          else if (value == "contentlink4") {
-            document.getElementById("contentlink4").style.display = "block";
-            document.getElementById("contentlink1").style.display = "none";
-            document.getElementById("contentlink2").style.display = "none";
-            document.getElementById("contentlink3").style.display = "none";
-          }
-        }
-
-        $(function() {
-          $('#btnChapterOne').click(()=>{
-            $("#chapterTwo").removeAttr('disabled');
-            $('#btnChapterOne').prop('disabled', true);
-          })
-
-          $('#btnChapterTwo').click(()=>{
-            $("#chapterThree").removeAttr('disabled');
-            $('#btnChapterTwo').prop('disabled', true);
-          })
-
-          $('#btnChapterThree').click(()=>{
-            $("#assessmentToggle").removeAttr('disabled');
-            $('#btnChapterThree').prop('disabled', true);
-          })
-      });
-          
-      </script>
-    </div>
-  </div>
-  </div>
+        <%} else {%>
+            <div style="margin-top: 50px; display: flex; justify-content: center; align-items: center;"
+                class="dashboard-below-container">
+                <div class="dashboard-left"
+                    style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                    <div>
+                        <a href="/course/reset"><button class="sort" style="color: #E02401;">Disenroll All
+                                Courses</button></a>
+                    </div>
+                    <div class="card-container" style="margin-top: 50px; width: 100%; justify-content: center;">
+                        <% for(var i=0; i<courses.length; i++){ %>
+                            <% if(courses[i].score < 0){ %>
+                                <a href="/course/dashboard?courseId=<%= courses[i].id %>">
+                                    <div class="card" style="height: 150px;">
+                                        <div class="card-heading orange narrow">
+                                            <p class="card-heading">
+                                                <%= courses[i].title %>
+                                                <i id="pin-<%= courses[i].id %>" style="margin-left: 80px; transform: rotate(20deg); color: #E02401;" class="fas fa-thumbtack"></i>
+                                            </p>
+                                        </div>
+                                        <div class="progress-container">
+                                            <p class="progress-text blue">Progress <span id="progress-text-<%= courses[i].id %>" class="orange"></span>%</p>
+                                            <progress class="progress" id="progress-<%= courses[i].id %>" value="0" max="100"></progress>
+                                        </div>
+                                        <p class="inactive-text" id="inactive-<%= courses[i].id %>" style="display: none;">INACTIVE</p> 
+                                    </div>
+                                </a>
+                                <% }else{ %>
+                                    <div class="card-completed ">
+                                        <div class="card-heading orange narrow">
+                                            <p class="card-heading">
+                                                <%= courses[i].title %>
+                                            </p>
+                                        </div>
+                                        <div class="progress-container">
+                                            <p class="progress-text blue" style="font-size: 23px; margin-top: -20px;">
+                                                Score <span class="orange">
+                                                    <%= courses[i].score %>
+                                                </span></p>
+                                            <p class="progress-text blue" style="margin-top: -20px;">Progress <span
+                                                    class="orange">Completed</span></p>
+                                        </div>
+                                    </div>
+                                    <% } %>
+                                        <% } %>
+                    </div>
+                    <%}%>
 </body>
-
-
 
 </html>
