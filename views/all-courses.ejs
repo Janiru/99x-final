@@ -54,7 +54,12 @@
                     </div>
     
                  <div class="small-card-info-container">
-                    <p id="course-status-<%= allcourses[i].id %>" class="status" style="font-size: 15px;">status</p>
+                     <% if(allcourses[i].status){ %>
+                        <p id="course-status-<%= allcourses[i].id %>" class="status" style="font-size: 15px;"><%= allcourses[i].status  %></p>
+                    <% }else{ %>
+                        <p id="course-status-<%= allcourses[i].id %>" class="status" style="font-size: 15px;">Not Enrolled</p>
+                    <% } %>
+                    
                     <p class="level blue"> <%= allcourses[i].level %></p>
                  </div>
                 </div>
