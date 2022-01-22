@@ -113,6 +113,8 @@ router.get('/dashboard', async (req, res) => {
   const courseId = req.query.courseId;
   const courseDetails = await courseService.courseDetails(userId, courseId);
   const enrollments = await courseService.getCourseEnrollmenrs(courseId);
+  // const reviews = await courseService.getCourseReviews(courseId);
+  // console.log(reviews);
   res.render(
     'course-dashboard.ejs',
     {

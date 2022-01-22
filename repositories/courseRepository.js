@@ -56,6 +56,22 @@ function getAllCourses(userId) {
   });
 }
 
+function getReviews(courseId) {
+  const sql = `SELECT review, cid FROM reviews 
+    INNER JOIN courses ON review.cid = courses.id
+  `;
+
+  return new Promise((resolve, reject) => {
+    knex_db
+      .raw(sql)
+      .then((_) => {
+        const result = _.filter((item) => item.cid == courseId);
+        resolve(_);
+      })
+      .catch(reject);
+  });
+}
+
 function getAverageMarks(courseId) {
   const sql = `SELECT * FROM userCourses WHERE cid = ? AND score <> ?`;
   return new Promise((resolve, reject) => {
@@ -376,5 +392,6 @@ module.exports = {
   getRecentCourses,
   getEnrollments,
   getAverageMarks,
+  getReviews,
   init,
 };
