@@ -180,8 +180,9 @@ router.get('/coursePage', async (req, res) => {
   const courseId = req.query.courseId;
   const courseContent = await courseService.courseContentDetails(courseId);
   courseContent.chapters.forEach((chapter, i) => {
-    const wordsPersecond = 4 + (4 * i * 5) / 100;
+    const wordsPersecond = 4;
     const wordCount = chapter.description.length;
+    console.log(wordCount);
     courseContent.chapters[i].time = Math.round(wordCount / wordsPersecond);
   });
 
