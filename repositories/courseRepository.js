@@ -64,10 +64,10 @@ function getUserCourses(userID) {
 
 function getSearchedCourses(userID, searchVal) {
   return new Promise((resolve, reject) => {
-    const sql2 = `SELECT title, level FROM courses WHERE title LIKE ?`;
+    const sql2 = `SELECT title, description, level FROM courses WHERE title LIKE '%${searchVal}%' OR description LIKE '%${searchVal}%'`;
 
     knex_db
-      .raw(sql2, [searchVal + "%"])
+      .raw(sql2)
       .then((courses) => {
         resolve(courses);
       })
@@ -117,7 +117,7 @@ function getSortedCourses(action, value) {
 }
 
 function getCourseDetails(userId, courseId) {
-  const sql = `SELECT id, title, level,duration, description, price FROM courses WHERE id = ?`;
+  const sql = `SELECT id, title, level, description,duration,enrollments, price FROM courses WHERE id = ?`;
   const sql2 = `SELECT uid FROM userCourses WHERE cid = ? AND uid = ?`;
 
   return new Promise(async (resolve, reject) => {

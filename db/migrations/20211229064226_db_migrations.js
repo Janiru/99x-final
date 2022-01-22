@@ -12,6 +12,7 @@ exports.up = function (knex) {
       table.string("title", 255);
       table.string("level", 255);
       table.string("duration", 255);
+      table.string("enrollments", 255);
       table.string("description");
       table.int("price");
     })

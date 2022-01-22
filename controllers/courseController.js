@@ -124,6 +124,7 @@ router.get("/dashboard", async (req, res) => {
       books: "books",
       price: courseDetails.course.price,
       duration: courseDetails.course.duration,
+      enrollments: courseDetails.enrollments,
     },
     (error, ejs) => {
       if (error) {
