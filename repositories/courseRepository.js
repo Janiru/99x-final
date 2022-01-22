@@ -86,7 +86,8 @@ function getSortedCourses(action, value) {
         sql = `SELECT id, title, level FROM courses ORDER BY title`;
       } else if (value == 'popularity') {
         sql = `
-        SELECT cid, COUNT(cid) as counts, 
+        SELECT cid, COUNT(cid) as counts,
+        courses.id, 
         courses.title, 
         courses.level, 
         courses.description, 

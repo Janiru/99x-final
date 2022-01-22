@@ -97,7 +97,7 @@
                 <div  class="popular-courses-container" id="popular-courses-container">
                     
                         <% recentCourses.forEach((course) => { %>
-                            <a href="#">
+                            <a href="/course/dashboard?courseId=<%= course.id %>">
                                 <div class="small-card-home">
                                     <div class="card-heading orange narrow">
                                         <div class="card-heading-container">
@@ -126,22 +126,22 @@
                 <p class="orange narrow" style="line-height: 30px; font-size: 36px; font-weight: 500; color: #3F3D56;"> Recently Added</p>
                 <div id="home_recent" class="small-card-container" style="margin-top: -15px;">
                     
-                    <% for(var i=0; i<4; i++){ %>
-                        <a href="/course/dashboard?courseId=<%= recentCourses[i].id %>">
+                    <% sideCourses.forEach((course) => { %>
+                        <a href="/course/dashboard?courseId=<%= course.id %>">
                             <div class="small-card-home">
                                 <div class="card-heading orange narrow">
                                     <div class="card-heading-container">
                                         <p class="card-heading" style="line-height: 25px;">
-                                            <%= recentCourses[i].title %>
+                                            <%= course.title %>
                                         </p>
                                     </div>
                                     <p class="level blue" style="margin-top: 20px;">
-                                        <%= recentCourses[i].level %>
+                                        <%= course.level %>
                                     </p>
                                 </div>
                             </div>
                         </a>
-                    <% } %>
+                    <% }) %>
                 </div>
            </div>
         </div>
