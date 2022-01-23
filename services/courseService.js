@@ -71,6 +71,11 @@ async function unenrollCourse(userId, courseId) {
   return course;
 }
 
+async function postCourseReview(courseId, userId, review) {
+  const course = courseRepository.postCourseReview(courseId, userId, review);
+  return course;
+}
+
 async function getCourseReviews(courseId) {
   const result = courseRepository.getReviews(courseId);
   return result;
@@ -107,4 +112,5 @@ module.exports = {
   getCourseEnrollmenrs,
   getCourseAverageMarks,
   getCourseReviews,
+  postCourseReview,
 };

@@ -16,11 +16,6 @@ exports.up = function (knex) {
       table.string('description');
       table.int('price');
     })
-    .createTable('reviews', function (table) {
-      table.increments('id').notNullable().primary();
-      table.int('cid').notNullable().references('id').inTable('courses');
-      table.string('review', 255);
-    })
     .createTable('mcqQuestions', function (table) {
       table.increments('qid').notNullable().primary();
       table.string('questions');

@@ -57,16 +57,18 @@ function getAllCourses(userId) {
 }
 
 function getReviews(courseId) {
-  const sql = `SELECT review, cid FROM reviews 
-    INNER JOIN courses ON review.cid = courses.id
+  const sql = `SELECT review, users.name, cid, uid from userCourses
+    INNER JOIN users on userCourses.uid = users.id
   `;
 
   return new Promise((resolve, reject) => {
     knex_db
       .raw(sql)
-      .then((_) => {
-        const result = _.filter((item) => item.cid == courseId);
-        resolve(_);
+      .then((rows) => {
+        const result = rows.filter(
+          (row) => row.cid == parseInt(courseId) && row.review != null
+        );
+        resolve(result);
       })
       .catch(reject);
   });
@@ -324,6 +326,22 @@ function getCourseMcq(courseId) {
   });
 }
 
+function postCourseReview(courseId, userId, review) {
+  const sql = `UPDATE usercourses
+    SET review = ?
+    WHERE cid = ? AND uid = ? 
+  `;
+
+  return new Promise((resolve, reject) => {
+    knex_db
+      .raw(sql, [review, courseId, userId])
+      .then(() => {
+        resolve();
+      })
+      .catch(reject);
+  });
+}
+
 function setCourseScore(courseId, userId, ans1, ans2, ans3) {
   const sql1 = `SELECT qid FROM courseQuestions WHERE cid = ?`;
   const sql3 = `UPDATE userCourses SET score = ? WHERE (cid = ? AND uid = ?)`;
@@ -393,5 +411,6 @@ module.exports = {
   getEnrollments,
   getAverageMarks,
   getReviews,
+  postCourseReview,
   init,
 };

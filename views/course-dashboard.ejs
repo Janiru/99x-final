@@ -117,6 +117,11 @@
 
         <div id="comments-container">
           <!-- TODO: Show comments here -->
+          <% if(reviews.length > 0){ %>
+            <% reviews.forEach((review) => { %>
+              <p><b><%= review.name %></b>: <span><%= review.review %></span></p>
+            <% }) %>
+          <% } %>
           <% if(enrolled == 'yes'){ %>
           <form action="/course/review/<%= id %>" id="course-review-form" method="POST"  class="review-form">
             <input name="user_review" type="text" id="review-text">
