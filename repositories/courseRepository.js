@@ -152,15 +152,11 @@ function getSortedCourses(action, value) {
         sql = `SELECT id, title, level FROM courses ORDER BY title`;
       } else if (value == 'popularity') {
         sql = `
-        SELECT cid, COUNT(cid) as counts,
-        courses.id, 
-        courses.title, 
-        courses.level, 
-        courses.description, 
-        courses.price  from userCourses
-        INNER JOIN courses on userCourses.cid = courses.id
-        GROUP BY cid
-        ORDER BY counts DESC
+
+        SELECT id, title, level, description, price, count(userCourses.cid) as counts FROM courses
+        LEFT JOIN userCourses on courses.id = userCourses.cid
+        GROUP BY id
+        ORDER BY counts DESC, title
         `;
       }
 
@@ -168,7 +164,20 @@ function getSortedCourses(action, value) {
         .raw(sql)
         .then((courses) => {
           console.log(courses);
-          resolve(courses);
+          const result = [];
+          courses.forEach((course) => {
+            if (!result.find((res) => res.id == course.id)) {
+              const count = courses.filter(
+                (item) => item.id == course.id
+              ).length;
+              result.push({ ...course, count });
+            }
+          });
+
+          const sortedArr = result.sort((a, b) =>
+            a.count == b.count ? a.tite - b.title : b.count - a.count
+          );
+          resolve(sortedArr);
         })
         .catch((error) => {
           reject(error);

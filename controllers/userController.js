@@ -55,6 +55,7 @@ router.get('/home', async (req, res) => {
             total += course.score;
           });
         }
+        console.log(data);
         courseService
           .sortedCourses('sort', 'popularity')
           .then((sortedCourses) => {
