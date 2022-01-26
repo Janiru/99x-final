@@ -1,5 +1,7 @@
 const bcrypt = require("bcrypt");
 const fetch = require("node-fetch");
+var CryptoJS = require("crypto-js");
+const { encode,decode } = require('../node_modules/hex-encode-decode')
 
 let _db;
 
@@ -10,24 +12,60 @@ function init(db) {
 const knex_db = require("../db/db-config");
 
 function getUserByEmailAndPassword(email, password) {
-  const sql = `SELECT id, name, email, password FROM users WHERE email = ?`;
+// check if there is a user excisting with the mail 
+sql =  `SELECT email from users`;
+knex_db.raw(sql).then((data)=>{
+  for(i = 0;i<data.length;i++){ 
+    DecryptedEmail = decode(CryptoJS.AES.decrypt(data[i].email, "HACKTITUDE_SecretKey").toString())
+    if(email == DecryptedEmail){
+      exist = true;
+      break;
+    }
+    else {
+      exist= false;
+    }    
+  }
+  console.log(exist)
+});
 
-  return new Promise(async (resolve, reject) => {
-    knex_db
-      .raw(sql, [email])
-      .then((data) => {
-        if (bcrypt.compareSync(password, data[0].password)) {
-          resolve(data[0]);
-        } else {
-          reject("User authentication failed");
-        }
-      })
-      .catch((error) => {
-        reject("User authentication failed");
-      });
-  });
-}
+//   const sql = `SELECT id, name, email, password FROM users WHERE email = ?`;
 
+//   return new Promise(async (resolve, reject) => {
+//     knex_db
+//       .raw(sql, [email])
+//       .then((dataa) => {
+//         if (bcrypt.compareSync(password, dataa[0].password)) {
+//           resolve(dataa[0]);
+//         } else {
+//           reject("User authentication failed");
+//         }
+//       })
+//       .catch((error) => {
+//         reject("User authentication failed");
+//       });
+//   });
+ }
+// function getUserByEmailAndPassword(email, password){
+//   sql =  `SELECT email, password from users`;
+//   knex_db.raw(sql).then((data)=>{
+//     for(i = 0;i<data.length;i++){ 
+//       DecryptedEmail = decode(CryptoJS.AES.decrypt(data[i].email, "HACKTITUDE_SecretKey").toString())
+//       if(email == DecryptedEmail){
+//         const sql = `SELECT email, password FROM users WHERE email = ?`;
+//         knex_db.raw(sql, email).then((data)=>{
+//           if (bcrypt.compareSync(password, data[0].password)) {
+//             console.log("login sucsess");
+//             resolve(data[0]);            
+//           } else {
+//             reject("User authentication failed");
+//           }
+//         });
+
+//       }
+//     }
+    
+//   });
+// }
 function getUserById(id) {
   const sql = `SELECT id, name, email, password FROM users WHERE id = ?`;
 
@@ -70,9 +108,10 @@ function signUpUser(name, email, passwordOne, passwordTwo) {
               reject(data);
             } else {
               const hashPassword = await bcrypt.hash(passwordTwo, 10);
+              const hashEmail = CryptoJS.AES.encrypt(email, "HACKTITUDE_SecretKey").toString();
               const sql = `INSERT INTO users(id, name, email, password, country_currency) VALUES(NULL,?,?,?,?)`;
               knex_db
-                .raw(sql, [name, email, hashPassword, "LKR"])
+                .raw(sql, [name, hashEmail, hashPassword, "LKR"])
                 .then(() => {
                   resolve();
                 })

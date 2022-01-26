@@ -1,3 +1,4 @@
+var CryptoJS = require("crypto-js");
 
 exports.seed = function(knex) {
   return knex('users').del()
@@ -6,7 +7,7 @@ exports.seed = function(knex) {
         {
           id: 1,
           name: "Allie Grater",
-          email: "allie@hacktitude.io",
+          email: CryptoJS.AES.encrypt("allie@hacktitude.io", "HACKTITUDE_SecretKey").toString(),
           password:
             "$2b$10$Ix6ceI.HcuGal9MqUE6Whu4UNF.OZWo0Ix3imeTP5UhhCeeZbDf5K",
           country_currency: "INR",
@@ -14,7 +15,7 @@ exports.seed = function(knex) {
         {
           id: 3,
           name: "Rose Bush",
-          email: "rose@hacktitude.io",
+          email: CryptoJS.AES.encrypt("rose@hacktitude.io", "HACKTITUDE_SecretKey").toString(),
           password:
             "$2b$10$uQURixWfKPXw4pDRR3qYyuriwSPhDg7bxY1s1OaW1YLOGZDO8kl3G",
           country_currency: "NZD",
@@ -22,7 +23,7 @@ exports.seed = function(knex) {
         {
           id: 4,
           name: "Art Decco",
-          email: "art@hacktitude.io",
+          email: CryptoJS.AES.encrypt("art@hacktitude.io", "HACKTITUDE_SecretKey").toString(),
           password:
             "$2b$10$c7.LcW7fBNm4a.m2LoOd9OmjVujAN/Be24Sl6kfvEjRhLtH.9XRs.",
           country_currency: "MYR",
@@ -30,7 +31,7 @@ exports.seed = function(knex) {
         {
           id: 5,
           name: "Mary Krismass",
-          email: "mary@hacktitude.io",
+          email: CryptoJS.AES.encrypt("mary@hacktitude.io", "HACKTITUDE_SecretKey").toString(),
           password:
             "$2b$10$rasDTA8GXxETrxPpaOz3Quplu/CguxF71/.gxTQ5vK3jNnYJjOEuK",
           country_currency: "LKR",
@@ -38,7 +39,7 @@ exports.seed = function(knex) {
         {
           id: 8,
           name: "Abby Normal",
-          email: "abby@hacktitude.io",
+          email: CryptoJS.AES.encrypt("abby@hacktitude.io", "HACKTITUDE_SecretKey").toString(),
           password:
             "$2b$10$rasDTA8GXxETrxPpaOz3Quplu/CguxF71/.gxTQ5vK3jNnYJjOEuK",
           country_currency: "SGD",
